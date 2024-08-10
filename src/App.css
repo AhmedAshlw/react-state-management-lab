@@ -7,3 +7,27 @@ li {
   list-style: none;
   margin: 10px;
 }
+body {
+  background-color: rgb(66, 65, 65);
+  color: white;
+}
+
+section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+section .zombie {
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  width: 150px;
+}
+
+.zombie span {
+  font-weight: bold;
+}
