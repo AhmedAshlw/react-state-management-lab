@@ -19,15 +19,24 @@ section {
   flex-wrap: wrap;
 }
 
-section .zombie {
+.zombie {
   padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
   width: 150px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .zombie span {
   font-weight: bold;
+}
+
+.TeamCont {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 }

@@ -1,35 +1,14 @@
-import "./App.css";
 import { useState } from "react";
-import ZombieFighter from "./components/ZombieFighter/ZombieFighter.jsx";
+import ZombieFighter from "./components/ZombieFighter/ZombieFighter";
 
-const team = "";
-const money = 100;
-// const [team, setTeam] = useState([]);
-// const [money, setMoney] = useState(100);
+import "./App.css";
 
-function App() {
-  const handleAddFighter = () => {
-    // filter the item out of the inventory
-    const newFighter = zombieFighters.filter(
-      (item) => item._id !== selectedItem._id
-    );
-    setzombieFighters(newFighter);
-    // add the incoming item to the user list
-    setUserFighter([...userFighter, selectedItem]);
-  };
-
-  const handleRemoveFighter = (selectedItem) => {
-    // filter the item out of the inventory
-    const newUserFighters = userFighter.filter(
-      (item) => item._id !== selectedItem._id
-    );
-    setUserFighter(newUserFighters);
-    // add the incoming item to the user list
-    setzombieFighters([...zombieFighters, selectedItem]);
-  };
-
-  const [userFighter, setUserFighter] = useState([]);
-  const [zombieFighters, setzombieFighters] = useState([
+const App = () => {
+  const [team, setTeam] = useState([]);
+  const [money, setMoney] = useState(100);
+  const [totalStrength, setTotalStrength] = useState(0);
+  const [totalAgility, setTotalAgility] = useState(0);
+  const [zombieFighters, setZombieFighters] = useState([
     {
       name: "Survivor",
       price: 12,
@@ -102,39 +81,78 @@ function App() {
     },
   ]);
 
-  const addTeam = (newTeam) => {
-    const newTeamsArray = [...zombieFighters, newTeam];
-    setTeam(newTeamsArray);
+  const handleAddFighter = (fighter) => {
+    if (money >= fighter.price) {
+      setTeam([...team, fighter]);
+      setMoney(money - fighter.price);
+      setTotalStrength(totalStrength + fighter.strength);
+      setTotalAgility(totalAgility + fighter.agility);
+    } else {
+      console.log("Not enough money");
+    }
   };
+
+  const handleRemoveFighter = (fighter) => {
+    try {
+      const deletedFighter = team.filter((zombie) => zombie.id !== fighter.id);
+      setTeam(deletedFighter);
+      setMoney(money + fighter.price);
+      setTotalStrength(totalStrength - fighter.strength);
+      setTotalAgility(totalAgility - fighter.agility);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const teamFighters = team.map((zombie, idx) => {
+    return (
+      <div className="zombie" key={idx}>
+        <img src={zombie.img} alt={zombie.name} />
+        <p>
+          <span>Name: {zombie.name}</span>
+        </p>
+        <p>
+          <span>Price: {zombie.price}</span>
+        </p>
+        <p>
+          <span>Strength: {zombie.strength}</span>
+        </p>
+        <p>
+          <span>Agility: {zombie.agility}</span>
+        </p>
+        <button
+          onClick={() => {
+            handleRemoveFighter(zombie);
+          }}
+        >
+          Remove
+        </button>
+      </div>
+    );
+  });
+
   return (
     <>
       <h1>Zombie Fighters</h1>
-      <h2>Money: {money}</h2>
-      <h2>Team Strength: {team}</h2>
-      <h2>Team Agility: {team}</h2>
-      <h2>Team: </h2>
-      <h3>Pick some team member </h3>
-
-      <section>
-        {zombieFighters.map((zombie, index) => (
-          <ZombieFighter
-            key={index}
-            title="Shop ZombieFighter"
-            zombie={zombieFighters}
-            handleItemClick={handleAddFighter}
-          />
-        ))}
-        {zombieFighters.map((zombie, index) => (
-          <ZombieFighter
-            key={index}
-            title="User ZombieFighter"
-            zombie={zombie}
-            handleItemClick={handleRemoveFighter}
-          />
-        ))}
-      </section>
+      <div>
+        <h3>Money: ${money}</h3>
+        <h3>Team Strength: {totalStrength}</h3>
+        <h3>Team Agility: {totalAgility}</h3>
+        <h2>Team</h2>
+        <div className="TeamCont">
+          {team.length === 0 ? (
+            <h4>Pick some team members!</h4>
+          ) : (
+            <ul>{teamFighters}</ul>
+          )}
+        </div>
+      </div>
+      <ZombieFighter
+        zombieFighters={zombieFighters}
+        handleAddFighter={handleAddFighter}
+      />
     </>
   );
-}
-//I didnt know how to do add and remove .. It was very time consuming
+};
+
 export default App;
